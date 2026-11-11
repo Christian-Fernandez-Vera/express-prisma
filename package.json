@@ -1,0 +1,22 @@
+{
+  "name": "express-prisma",
+  "version": "1.0.0",
+  "description": "Esercizio Clase 45 - Express + Prisma ORM con modelo Book",
+  "main": "app.js",
+  "scripts": {
+    "watch": "node --watch --env-file=.env app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@prisma/adapter-mariadb": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^18.0.10",
+    "prisma": "^7.10.1"
+  }
+}
