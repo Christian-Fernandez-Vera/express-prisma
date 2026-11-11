@@ -20,5 +20,3 @@ app.use('/books', booksRouter);
 app.listen(port, () => {
   console.log(`API Library in ascolto su http://localhost:${port}`);
 });
-
-export default app;
