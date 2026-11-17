@@ -6,7 +6,7 @@ export default defineConfig({
   migrations: {
     path: "prisma/migrations",
     // Comando per eseguire lo script di seed: npx prisma db seed
-    seed: "prisma/seed.js",
+    seed: "node prisma/seed.js",
   },
   datasource: {
     url: process.env["DATABASE_URL"],

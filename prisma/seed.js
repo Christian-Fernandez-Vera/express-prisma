@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import { PrismaClient } from "@../generated/prisma/index.js";
+import { PrismaClient } from "../generated/prisma/index.js";
 
 // Configurazione del adatadore MariaDB/MySQL con la URL fornita dal file .env
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL);
@@ -41,4 +41,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-  });
+ }); 
