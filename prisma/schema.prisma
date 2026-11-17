@@ -7,6 +7,16 @@ datasource db {
   provider = "mysql"
 }
 
+model Category {
+  id       Int      @id @default(autoincrement())
+  name     String   @unique @db.VarChar(100)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  //Relazione 1:N -> UnCategoryID può avere N libri
+  books Book[]
+}
+
 model Book {
   id          Int      @id @default(autoincrement())
   title       String   @db.VarChar(255)
@@ -16,4 +26,6 @@ model Book {
   isAvailable Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int
 }
