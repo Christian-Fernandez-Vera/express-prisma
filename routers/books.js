@@ -37,9 +37,42 @@ router.get("/", async (req, res) => {
 });
 
 //2. SHOW - Detaglio di un libro per ID (GET/ books/:id)
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  res.send(`Dettaglio del libro con ID: ${id}`);
+router.get("/:id", async (req, res) => {
+  // const { id } = req.params;
+  // res.send(`Dettaglio del libro con ID: ${id}`);
+
+  const id = Number(req.params.id);
+  // Validazione 1: verifichiamo che il ID sia un numero valido
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({
+      error: "Errore ID Non Valido",
+    });
+  }
+
+  // Cerchiamo l'libro unico e includiamo i dati della categoria
+  const book = await prisma.book.findUnique({
+    where: { id },
+    omit: {
+      categoryId: true,
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  // Validazione 2: Si Prisma ritonra Null, l'libro non esiste nella DB
+  if(!book){
+    return res.status(404).json({
+      error: "Libro non trovato",
+    });
+  }
+
+  res.json(book);
 });
 
 //3. STORE - Creare un nuovo libro (POST / books)
