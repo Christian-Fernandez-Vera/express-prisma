@@ -76,8 +76,39 @@ router.get("/:id", async (req, res) => {
 });
 
 //3. STORE - Creare un nuovo libro (POST / books)
-router.post("/", (req, res) => {
-  res.send("Creazione di un nuovo libro (Store CRUD)");
+router.post("/", async (req, res) => {
+  // res.send("Creazione di un nuovo libro (Store CRUD)");
+  const { title, description, author, price, isAvaible, categoryId } = req.body;
+
+  // Validazione basica secondo schema.prisma
+  if (!title || !author || price === undefined || !categoryId) {
+    return res.status(400).json({
+      error: "Manca informazione Obbligatoria: title, author, price y categoryId"
+    });
+  }
+
+  // Creamo l'registro in MySQL
+  const newBook = await prisma.book.create({
+    data: {
+      title,
+      description,
+      author,
+      price: Number(price),
+      isAvaible, // Si è undefined, Prisma genera @default(true)
+      categoryId: Number(categoryId),
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  //HTTP 201 CREATED
+  res.status(201).json(newBook);
 });
 
 //4. UPDATE - Modificare un libro esistente (PUT / books/:id)
