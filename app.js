@@ -1,5 +1,7 @@
-import express from 'express'
+import express from 'express';
 import booksRouter from './routers/books.js';
+import errorsHandler from './middleware/errorHandler.js';
+import notFound from './middleware/notFound.js';
 
 //Inizializzo express
 const app = express();
@@ -15,6 +17,12 @@ app.get('/', (req, res) => {
 
 //Registrazione il router di libri sotto il prefisso '/books'
 app.use('/books', booksRouter);
+
+//Middleware per gestire 404 (route non trovate)
+app.use(notFound);
+
+//Middleware per gestire errori
+app.use(errorsHandler);
 
 //Avvio il server
 app.listen(port, () => {
