@@ -1,7 +1,7 @@
-import express from 'express';
-import booksRouter from './routers/books.js';
-import errorsHandler from './middleware/errorHandler.js';
-import notFound from './middleware/notFound.js';
+import express from "express";
+import booksRouter from "./routers/books.js";
+import errorsHandler from "./middlewares/errorsHandler.js";
+import notFound from "./middlewares/notFound.js";
 
 //Inizializzo express
 const app = express();
@@ -11,12 +11,12 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // Ruta base di HOME
-app.get('/', (req, res) => {
-  res.send('Benvenuto alla API della library con Express e Prisma');
+app.get("/", (req, res) => {
+  res.send("Benvenuto alla API della library con Express e Prisma");
 });
 
 //Registrazione il router di libri sotto il prefisso '/books'
-app.use('/books', booksRouter);
+app.use("/books", booksRouter);
 
 //Middleware per gestire 404 (route non trovate)
 app.use(notFound);
