@@ -86,6 +86,39 @@ export async function store(req, res) {
       error: "Il prezzo o il categoryId non hanno un formato numero valido",
     });
   }
-  
 
+  //Validazione 3: Verifica la FK category
+  const categoryExists = await prisma.category.findUnique({
+    where: { id: parsedCategoryId },
+  });
+  
+  if (!categoryExists) {
+    return res.status(400).json({
+      error: "categoryId non valido: la categoria selezionata non esiste",
+    });
+  }
+
+  const newBook = await prisma.book.create({
+    data: {
+      title,
+      description,
+      author,
+      price: parsedPrice,
+      isAvailable, // si è undefined, Prisma fa @default(true)
+      categoryId: parsedCategoryId,
+    },
+    omit: {
+      categoryId: true,
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  res.status(201).json(newBook);
 }
