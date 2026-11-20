@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 //1. INDEX - Tutti i libri (GET / Book)
 export async function index(req, res) {
