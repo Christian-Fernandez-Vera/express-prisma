@@ -19,7 +19,6 @@ router.get("/:id", show);
 router.post("/", store);
 
 // 4. UPDATE - Aggiornamento completa o parziale
-router.put("/:id", update);
 router.patch("/:id", update);
 
 // 5. DESTROY - Eliminazione di un libro
