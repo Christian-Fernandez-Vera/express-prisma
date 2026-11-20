@@ -195,3 +195,38 @@ let parsedCategoryId;
 
   res.json(updatedBook);
 }
+
+//5. DESTROY - Elimina un libro (DELETE /books/:id)
+export async function destroy(req, res) {
+  const id = Number(req.params.id);
+
+  // Validazione 1: formato ID
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({
+      error: "ID del libro non valido",
+    });
+  }
+  // Validazione 2: Verifica la esistenza del libro prima di cancellarlo
+  const existingBook = await prisma.book.findUnique({
+    where: { id },
+  });
+
+  if (!existingBook) {
+    return res.status(404).json({
+      error: "Libro non trovato",
+    });
+  }
+
+  // Elimina il libro
+  await prisma.book.delete({
+    where: { id },
+  });
+
+  // Risposta di successo senza body
+  res.status(204).send();
+
+  /* Opzione B (Alternativa per il bottone "delete" in Frontend):
+  const deletedBook = await prisma.book.delete({ where: { id } });
+  res.status(200).json(deletedBook);
+  */
+}
