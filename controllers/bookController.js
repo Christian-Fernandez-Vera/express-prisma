@@ -122,3 +122,76 @@ export async function store(req, res) {
 
   res.status(201).json(newBook);
 }
+
+//4. UPDATE - Aggiornare un libro (PUT/PATCH /books/:id)
+export async function update(req, res) {
+  const id = Number(req.params.id);
+
+  //Validazione 1: formato dell'ID
+  if(!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({
+      error: "ID del libro non valido",
+    });
+  }
+
+  //Validazione 2: Verifica che il libro esista
+  const existingBook = await prisma.book.findUnique({
+    where: { id },
+  });
+
+  if(!existingBook) {
+    return res.status(404).json({
+      error: "Libro non trovato",
+    });
+  }
+
+  const { title, description, author, price, isAvailable, categoryId } = req.body;
+
+  //Validazione 3: Campi facoltativi (tipo e valore)
+let parsedCategoryId;
+  if (categoryId !== undefined) {
+    parsedCategoryId = Number(categoryId);
+
+    if (!Number.isInteger(parsedCategoryId) || parsedCategoryId <= 0) {
+      return res.status(400).json({
+        error: "Formato categoryId non valido",
+      });
+    }
+
+    const categoryExists = await prisma.category.findUnique({
+      where: { id: parsedCategoryId },
+    });
+
+    if (!categoryExists) {
+      return res.status(400).json({
+        error: "categoryId non valido: la categoria non esiste",
+      });
+    }
+  } 
+
+  // Validazione 4: Prisma ignora undefined
+  const updatedBook = await prisma.book.update({
+    where: { id },
+    data: {
+      title,
+      description,
+      author,
+      price: parsedPrice,
+      isAvailable,
+      categoryId: parsedCategoryId,
+    },
+    omit: {
+      categoryId: true,
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  res.json(updatedBook);
+}
